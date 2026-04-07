@@ -85,10 +85,10 @@ Write-Host ""
 # 4. RESTORE DEPENDENCIES
 # ==============================
 Write-Host "📦 Restoring dependencies..." -ForegroundColor Yellow
-dotnet restore -q 2>&1 | Out-Null
-
+$restoreOutput = dotnet restore 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host "✗ Restore failed!" -ForegroundColor Red
+    Write-Host $restoreOutput -ForegroundColor Gray
     exit 1
 }
 Write-Host "✓ Dependencies restored" -ForegroundColor Green
@@ -98,14 +98,16 @@ Write-Host ""
 # 5. BUILD PROJECT
 # ==============================
 Write-Host "🔨 Building Release version..." -ForegroundColor Yellow
-dotnet build -c Release -q 2>&1 | Out-Null
-
+$buildOutput = dotnet build -c Release 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "✗ Build failed!" -ForegroundColor Red
+    Write-Host "✗ Release build failed!" -ForegroundColor Red
+    Write-Host $buildOutput -ForegroundColor Gray
+    Write-Host ""
     Write-Host "  Trying Debug build..." -ForegroundColor Yellow
-    dotnet build -c Debug -q 2>&1 | Out-Null
+    $debugOutput = dotnet build -c Debug 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "✗ Debug build also failed!" -ForegroundColor Red
+        Write-Host $debugOutput -ForegroundColor Gray
         exit 1
     }
 }

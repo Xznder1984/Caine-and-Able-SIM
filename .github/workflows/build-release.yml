@@ -1,0 +1,94 @@
+name: Build Release Installer
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Release
+      run: dotnet build -c Release --no-restore
+
+    - name: Publish Release
+      run: dotnet publish -c Release -r win-x64 --self-contained
+
+    - name: Create portable executable
+      run: |
+        # Copy the published executable to root
+        Copy-Item -Path "bin/Release/net9.0-windows/win-x64/publish/CASimulator.exe" -Destination "CASimulator-Release.exe"
+        Write-Host "Portable executable created: CASimulator-Release.exe"
+      shell: pwsh
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          # C&A OS Simulator Release
+
+          ## Installation
+
+          ### Option 1: One-Command Install (Recommended)
+          ```powershell
+          iex (irm https://raw.githubusercontent.com/Xznder1984/Caine-and-Able-SIM/main/install.ps1)
+          ```
+
+          ### Option 2: Download Standalone Executable
+          1. Download `CASimulator-Release.exe`
+          2. Run it directly (no .NET installation needed)
+
+          ### Option 3: Clone & Build
+          ```powershell
+          git clone https://github.com/Xznder1984/Caine-and-Able-SIM.git
+          cd Caine-and-Able-SIM
+          dotnet run -c Release
+          ```
+
+          ## Features
+          - Interactive "Delete Caine" simulator
+          - Authentic retro terminal UI
+          - 12 glitch effect types
+          - Virtual filesystem with lore
+          - Emergency exit: Ctrl+Shift+Q
+
+          **Ready to delete?** Run the app and type: `delete caine`
+
+        draft: false
+        prerelease: false
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: CASimulator-Release
+        path: |
+          CASimulator-Release.exe
+          bin/Release/net9.0-windows/win-x64/publish/
+
+    - name: Publish to GitHub Releases
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: CASimulator-Release.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

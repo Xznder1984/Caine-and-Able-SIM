@@ -1,0 +1,58 @@
+<Window x:Class="CASimulator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="C&amp;A SYSTEM" 
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#000000"
+        Foreground="#00FF00"
+        FontFamily="Courier New"
+        FontSize="14"
+        AllowsTransparency="True">
+    <Grid Background="#000000" Name="MainGrid">
+        <!-- Header Bar -->
+        <StackPanel VerticalAlignment="Top" Background="#1a1a1a" Height="40" Orientation="Horizontal">
+            <TextBlock Text="C&amp;A SYSTEM" FontSize="16" FontWeight="Bold" Foreground="#00FF00" 
+                       Margin="15,10,0,0" VerticalAlignment="Center"/>
+            <TextBlock Name="SystemTimeBlock" FontSize="12" Foreground="#00AA00" 
+                       Margin="Auto,10,15,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Main Content Area -->
+        <Grid VerticalAlignment="Stretch" Margin="0,40,0,0">
+            <!-- Terminal Output -->
+            <TextBox Name="TerminalOutput" 
+                     Background="#000000" 
+                     Foreground="#00FF00" 
+                     FontFamily="Courier New" 
+                     FontSize="13"
+                     IsReadOnly="True"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     Padding="15,15,15,15"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"/>
+
+            <!-- Input Line -->
+            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" Margin="15,0,15,15">
+                <TextBlock Name="CommandPrompt" Text="CA&gt; " Foreground="#00FF00" FontFamily="Courier New" FontSize="13"/>
+                <TextBox Name="CommandInput" 
+                         Background="#000000" 
+                         Foreground="#00FF00" 
+                         FontFamily="Courier New" 
+                         FontSize="13"
+                         Width="500"
+                         Height="25"
+                         BorderThickness="0"
+                         Padding="5,3,5,3"
+                         KeyDown="CommandInput_KeyDown"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Scanlines Overlay -->
+        <Canvas Name="ScanlinesCanvas" Background="Transparent" IsHitTestVisible="False"/>
+
+        <!-- Glitch Overlay -->
+        <Canvas Name="GlitchCanvas" Background="Transparent" IsHitTestVisible="False"/>
+    </Grid>
+</Window>

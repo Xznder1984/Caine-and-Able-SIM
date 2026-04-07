@@ -1,0 +1,42 @@
+# Build Results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+.idea/
+
+# Dependencies
+packages/
+.nuget/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Project specific
+assets/sounds/*.wav
+assets/sounds/*.mp3
+assets/images/*.jpg
+assets/images/*.jpeg
+assets/images/*.png
+!assets/README.txt

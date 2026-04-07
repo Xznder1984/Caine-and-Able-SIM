@@ -98,20 +98,21 @@ Write-Host ""
 # 5. BUILD PROJECT
 # ==============================
 Write-Host "🔨 Building Release version..." -ForegroundColor Yellow
-$buildOutput = dotnet build -c Release 2>&1
+$buildOutput = dotnet build -c Release 2>&1 | Where-Object { $_ -notmatch "warning CA1416|CA1824" }
 if ($LASTEXITCODE -ne 0) {
     Write-Host "✗ Release build failed!" -ForegroundColor Red
-    Write-Host $buildOutput -ForegroundColor Gray
+    Write-Host ($buildOutput | Select-String "error" -Context 2) -ForegroundColor Gray
     Write-Host ""
     Write-Host "  Trying Debug build..." -ForegroundColor Yellow
-    $debugOutput = dotnet build -c Debug 2>&1
+    $debugOutput = dotnet build -c Debug 2>&1 | Where-Object { $_ -notmatch "warning CA1416|CA1824" }
     if ($LASTEXITCODE -ne 0) {
         Write-Host "✗ Debug build also failed!" -ForegroundColor Red
-        Write-Host $debugOutput -ForegroundColor Gray
+        Write-Host ($debugOutput | Select-String "error" -Context 2) -ForegroundColor Gray
         exit 1
     }
+} else {
+    Write-Host "✓ Build successful (warnings are platform-specific, safe to ignore)" -ForegroundColor Green
 }
-Write-Host "✓ Build successful" -ForegroundColor Green
 Write-Host ""
 
 # ==============================

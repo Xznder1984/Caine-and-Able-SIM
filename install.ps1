@@ -18,9 +18,6 @@ Write-Host "║  The Amazing Digital Circus            ║" -ForegroundColor Cya
 Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
 
-# ==============================
-# 1. CHECK .NET INSTALLATION
-# ==============================
 Write-Host "🔍 Checking .NET installation..." -ForegroundColor Yellow
 
 $dotnetVersion = dotnet --version 2>&1
